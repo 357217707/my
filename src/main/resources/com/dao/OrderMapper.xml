@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dao.OrderMapper" >
+  <resultMap id="BaseResultMap" type="com.entity.Order" >
+    <constructor >
+      <idArg column="id" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="create_time" jdbcType="TIMESTAMP" javaType="java.util.Date" />
+      <arg column="uid" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="total" jdbcType="DOUBLE" javaType="java.lang.Double" />
+      <arg column="address" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="pay_status" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="ship_status" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="aid" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="eva_status" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="receive_status" jdbcType="INTEGER" javaType="java.lang.Integer" />
+    </constructor>
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, create_time, uid, total, address, ship_status,pay_status,aid,eva_status,receive_status
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from orders
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+
+  <select id="getLastInsertId" resultType="java.lang.Integer">
+    SELECT LAST_INSERT_ID();
+  </select>
+  <select id="selectAllByUid" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+    select
+    <include refid="Base_Column_List" />
+    from orders
+    where uid = #{uid,jdbcType=INTEGER}
+  </select>
+
+  <select id="selectNoPay" resultMap="BaseResultMap">
+    SELECT
+    <include refid="Base_Column_List" />
+     FROM orders WHERE pay_status=0
+  </select>
+
+  <select id="selectNoFaHuo" resultMap="BaseResultMap">
+    SELECT
+    <include refid="Base_Column_List" />
+    FROM orders WHERE pay_status=1 AND ship_status=0
+  </select>
+  <select id="selectNoShouHuo" resultMap="BaseResultMap">
+    SELECT
+    <include refid="Base_Column_List" />
+    FROM orders WHERE pay_status=1 AND ship_status=1 and  receive_status=0
+  </select>
+  <select id="selectNoPingJia" resultMap="BaseResultMap">
+    SELECT
+    <include refid="Base_Column_List" />
+    FROM orders WHERE pay_status=1 AND ship_status=1 and   receive_status=1 and eva_status=0
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from orders
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.entity.Order" >
+    insert into orders ( id,create_time, uid,
+      total, address, ship_status,pay_status,aid,eva_status,receive_status
+      )
+    values (#{id}, #{createTime,jdbcType=TIMESTAMP}, #{uid,jdbcType=INTEGER},
+      #{total,jdbcType=DOUBLE}, #{address,jdbcType=VARCHAR}, #{shipStatus,jdbcType=INTEGER},#{payStatus},#{aid},#{evaStatus},{receiveStatus}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.entity.Order" >
+    insert into orders
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="uid != null" >
+        uid,
+      </if>
+      <if test="total != null" >
+        total,
+      </if>
+      <if test="address != null" >
+        address,
+      </if>
+      <if test="shipStatus != null" >
+        ship_status,
+      </if>
+      <if test="payStatus != null" >
+        pay_status,
+      </if>
+      <if test="aid != null" >
+        aid,
+      </if>
+      <if test="eva_status != null" >
+        eva_status,
+      </if>
+      <if test="eva_status != null" >
+        receive_status,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="uid != null" >
+        #{uid,jdbcType=INTEGER},
+      </if>
+      <if test="total != null" >
+        #{total,jdbcType=DOUBLE},
+      </if>
+      <if test="address != null" >
+        #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="shipStatus != null" >
+        #{shipStatus,jdbcType=INTEGER},
+      </if>
+      <if test="payStatus != null" >
+        #{payStatus},
+      </if>
+      <if test="aid != null" >
+        #{aid},
+      </if>
+      <if test="evaStatus != null" >
+        #{evaStatus},
+      </if>
+      <if test="receiveStatus != null" >
+        #{receiveStatus},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.entity.Order" >
+    update orders
+    <set >
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="uid != null" >
+        uid = #{uid,jdbcType=INTEGER},
+      </if>
+      <if test="total != null" >
+        total = #{total,jdbcType=DOUBLE},
+      </if>
+      <if test="address != null" >
+        address = #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="shipStatus != null" >
+        ship_status = #{shipStatus,jdbcType=INTEGER},
+      </if>
+      <if test="payStatus != null" >
+       pay_status= #{payStatus},
+      </if>
+      <if test="aid != null" >
+        aid = #{aid},
+      </if>
+      <if test="evaStatus != null" >
+        evaStatus = #{evaStatus},
+      </if>
+      <if test="receiveStatus != null" >
+        receive_status = #{receiveStatus}
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.entity.Order" >
+    update orders
+    set create_time = #{createTime,jdbcType=TIMESTAMP},
+      uid = #{uid,jdbcType=INTEGER},
+      total = #{total,jdbcType=DOUBLE},
+      address = #{address,jdbcType=VARCHAR},
+      ship_status = #{shipStatus,jdbcType=INTEGER},
+      pay_status=#{payStatus},
+      aid = #{aid},
+      eva_status=#{evaStatus},
+      receive_status=#{receiveStatus}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>
